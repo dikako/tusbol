@@ -11,20 +11,23 @@
     <button type="button" onclick="upload();">UPLOAD</button>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.min.js"></script>
+    <script type="text/javascript" src="node_modules/faker/dist/faker.js"></script>
     <script>
+
         function upload() {
             // Get the selected file from the input element
             var file = document.getElementById('dikaajg').files[0]
             // var iniID = 0;
-            let iniID
-            
+            let iniID;
+            let title = faker.random.uuid();
+
             $.ajax({
                 url: 'https://rc-api.rctiplus.com/ugc-vote/api/v1/competition/upload_data',
                 type: 'post',
                 data: JSON.stringify({
                     category_id: 0,
                     competition_id: 28 ,
-                    video_title: "test_upload",
+                    video_title: "test_"+title,
                 }),
                 headers: {
                     Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2aWQiOjUxMDcsInRva2VuIjoiMjg4M2ZiMmE5OGZiMDJhMiIsInBsIjoibXdlYiIsImRldmljZV9pZCI6ImRpa2Frb2tvIn0.tWuVMh5ZYlJnoU6MQ-d3n71oliRI80PiKW1jk8s7mDk'
@@ -35,13 +38,9 @@
                     console.log(data)
                     iniID = data.data.id
                     console.log(iniID)
-                }
-            });
-            
-            
-            console.log(iniID)
-            // Create a new tus upload
-            var upload = new tus.Upload(file, {
+
+	        // Create a new tus upload
+                var upload = new tus.Upload(file, {
                 endpoint: "http://o-rc-api-tusd.rctiplus.com/files/",
                 retryDelays: [0, 3000, 5000, 10000, 20000],
                 metadata: {
@@ -60,10 +59,14 @@
                     console.log("Download %s from %s", upload.file.name, upload.url)
                 }
             })
-
-            
                     // Start the upload
                     upload.start()
+                }
+            });
+            
+            
+            
+            
         }
     </script>
 </body>
